@@ -33,10 +33,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install MySQL Client
-      shell: bash
-      run: sudo apt-get install sed
-    - name: Mysql Diff
+    - name: MySQL Diff
       shell: bash
       run: |
         user1=${{ inputs.username1 }};
