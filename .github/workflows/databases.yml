@@ -31,10 +31,10 @@ jobs:
           brew install mysql
           brew install mysql@5.7
           brew unlink mysql && brew link mysql@5.7
+          echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> /Users/runner/.bash_profile
+          bash
           mysql --version
           mysqldump --version
-          echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> /Users/runner/.bash_profile
-          source 
       # Runs a single command using the runners shell
       - name: Check MySQL schemas
         uses: ./
