@@ -40,18 +40,24 @@ runs:
         host1=${{ inputs.hostname1 }};
         pwd1=${{ inputs.password1 }};
         db1=${{ inputs.database1 }};
+        echo "Connecting to DB1"
         mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user1 $pwd1 $host1) -d --column-statistics=0 --no-tablespaces --skip-add-drop-table --skip-add-drop-database --single-transaction $db1 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db1.sql
+        echo "db1.sql created"
         # Use details to connect to dev and mysqldump the tables without data
         user2=${{ inputs.username2 }}
         host2=${{ inputs.hostname2 }}
         pwd2=${{ inputs.password2 }}
         db2=${{ inputs.database2 }}
+        echo "Connecting to DB2"
         mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user2 $pwd2 $host2) -d --column-statistics=0 --no-tablespaces --skip-add-drop-table --skip-add-drop-database --single-transaction $db2 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db2.sql
+        echo "db2.sql created"
         if [[ $? -ne 0 ]]; then
             echo >&2 "SQL error"
             exit 1
         fi
+        echo "Checking for differences"
         diff db1.sql db2.sql > db1-db2.diff
+        echo "Checking complete"
         if [[ $? -ne 0 ]]; then
             echo "+-----------------------------------+"
             echo "|             Diff Created         |"
@@ -62,7 +68,7 @@ runs:
             cat "db1-db2.diff";
             exit 1
         fi
-
+        echo "No differences detected"
         # If the contents of the stage-prod diff is empty, that means the schemas are exactly the same, and production release is safe if stage is safe.
         if [ -s "db1-db2.diff" ]; then
             cat "db1-db2.diff";
@@ -78,6 +84,7 @@ runs:
             cat "db1-db2.diff";
             exit 1;
         fi
+        echo "Completed"
 
 
 
