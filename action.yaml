@@ -36,12 +36,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install MySQL Client 5.7
-      shell: bash
-      run: |
-        brew install mysql-client@5.7
-        brew link mysql-client@5.7
-        mysqldump --version
     - name: MySQL Diff
       shell: bash
       run: |
@@ -51,6 +45,10 @@ runs:
         db1=${{ inputs.database1 }};
         echo "Connecting to DB1"
         mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user1 $pwd1 $host1) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db1 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db1.sql
+        if [[ $? -ne 0 ]]; then
+            echo >&2 "SQL error"
+            exit 1
+        fi
         echo "db1.sql created"
         # Use details to connect to dev and mysqldump the tables without data
         user2=${{ inputs.username2 }}
@@ -59,7 +57,6 @@ runs:
         db2=${{ inputs.database2 }}
         echo "Connecting to DB2"
         mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user2 $pwd2 $host2) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db2 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db2.sql
-        echo "db2.sql created"
         if [[ $? -ne 0 ]]; then
             echo >&2 "SQL error"
             exit 1
