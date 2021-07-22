@@ -33,6 +33,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install MySQL Client
+      shell: bash
+      run: yum install mysql
     - name: Mysql Diff
       shell: bash
       run: |
