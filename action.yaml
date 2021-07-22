@@ -2,7 +2,7 @@ name: mysql-schema-diff
 author: Sean Burke
 description: Check to see if the MySQL schemas for 2 DBs are the same
 inputs:
-  host1:
+  hostname1:
     description: 'The host of the first mysql connection'
     required: false
     default: 'localhost'
@@ -16,7 +16,7 @@ inputs:
   database1:
     description: 'The database name of the first mysql connection'
     required: true
-  host2:
+  hostname2:
     description: 'The host of the second mysql connection'
     required: false
     default: 'localhost'
