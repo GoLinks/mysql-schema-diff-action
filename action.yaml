@@ -39,9 +39,8 @@ runs:
     - name: Install MySQL Client 5.7
       shell: bash
       run: |
-        brew remove mysql
-        brew cleanup
         brew install mysql-client@5.7
+        brew link mysql
     - name: MySQL Diff
       shell: bash
       run: |
