@@ -1,6 +1,9 @@
 name: mysql-schema-diff
 author: Sean Burke
 description: Check to see if the MySQL schemas for 2 DBs are the same
+branding:
+  icon: 'database'
+  color: 'purple'
 inputs:
   hostname1:
     description: 'The host of the first mysql connection'
