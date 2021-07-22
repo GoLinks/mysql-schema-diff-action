@@ -40,7 +40,7 @@ runs:
       shell: bash
       run: |
         brew install mysql-client@5.7
-        brew link mysql
+        brew link mysql-client@5.7
     - name: MySQL Diff
       shell: bash
       run: |
