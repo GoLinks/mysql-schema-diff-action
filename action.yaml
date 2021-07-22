@@ -44,6 +44,7 @@ runs:
       user2=${{ inputs.username2 }}
       host2=${{ inputs.hostname2 }}
       pwd2=${{ inputs.password2 }}
+      db2=${{ inputs.database2 }}
       mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user2 $pwd2 $host2) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db2 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db2.sql
       if [[ $? -ne 0 ]]; then
           echo >&2 "SQL error"
