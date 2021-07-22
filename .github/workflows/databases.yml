@@ -29,6 +29,7 @@ jobs:
         shell: bash
         run: |
           brew install mysql@5.7
+          brew install mysql@5.7
           brew unlink mysql && brew link mysql@5.7
       # Runs a single command using the runners shell
       - name: Check MySQL schemas
