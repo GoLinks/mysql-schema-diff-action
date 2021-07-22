@@ -77,6 +77,7 @@ runs:
           cat "db1-db2.diff";
           exit 1;
       fi
+  shell: bash
 
 
 
