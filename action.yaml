@@ -41,6 +41,7 @@ runs:
       run: |
         brew install mysql-client@5.7
         brew link mysql-client@5.7
+        mysqldump --version
     - name: MySQL Diff
       shell: bash
       run: |
