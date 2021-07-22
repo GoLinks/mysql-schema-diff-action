@@ -56,36 +56,7 @@ runs:
             exit 1
         fi
         echo "Checking for differences"
-        diff db1.sql db2.sql > db1-db2.diff
-        echo "Checking complete"
-        if [[ $? -ne 0 ]]; then
-            echo "+-----------------------------------+"
-            echo "|             Diff Created         |"
-            echo "+-----------------------------------+"
-            echo ""
-            echo "Created: db1-db2.diff"
-            echo ""
-            cat "db1-db2.diff";
-            exit 1
-        fi
-        echo "No differences detected"
-        # If the contents of the stage-prod diff is empty, that means the schemas are exactly the same, and production release is safe if stage is safe.
-        if [ -s "db1-db2.diff" ]; then
-            cat "db1-db2.diff";
-            exit 1;
-        elif [ -s "db1.sql" ] && [ -s "db2.sql" ]; then
-            echo ""
-            echo ""
-            echo "+------------------------+"
-            echo "|     Schemas Match      |"
-            echo "+------------------------+"
-            exit 0;
-        else
-            cat "db1-db2.diff";
-            exit 1;
-        fi
+        diff db1.sql db2.sql
         echo "Completed"
-
-
 
   
