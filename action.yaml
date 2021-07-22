@@ -76,7 +76,7 @@ runs:
         if [ -s "db1-db2.diff" ]; then
             cat "db1-db2.diff";
             exit 1;
-        elif [ -s "db1.sql" ] && [ -s "db2.sql"]; then
+        elif [ -s "db1.sql" ] && [ -s "db2.sql" ]; then
             echo ""
             echo ""
             echo "+------------------------+"
