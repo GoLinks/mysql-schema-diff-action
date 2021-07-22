@@ -39,12 +39,17 @@ runs:
     - name: Mysql Diff
       shell: bash
       run: |
+        echo "line 1"
         user1=${{ inputs.username1 }};
+        echo "line 3"
         host1=${{ inputs.hostname1 }};
+        echo "line 5"
         pwd1=${{ inputs.password1 }};
+        echo "line 7"
         db1=${{ inputs.database1 }};
+        echo "line 9"
         mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user1 $pwd1 $host1) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db1 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db1.sql
-
+        echo "line 11"
         # Use details to connect to dev and mysqldump the tables without data
         user2=${{ inputs.username2 }}
         host2=${{ inputs.hostname2 }}
