@@ -35,7 +35,7 @@ runs:
   steps:
     - name: Install MySQL Client
       shell: bash
-      run: sudo apt-get install mysql-client
+      run: sudo apt-get install sed
     - name: Mysql Diff
       shell: bash
       run: |
