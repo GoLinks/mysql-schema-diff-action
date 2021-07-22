@@ -30,52 +30,52 @@ inputs:
   database2:
     description: 'The database name of the first mysql connection'
     required: true
-  runs:
-    using: "composite"
-    steps:
-    - run: |
-        user1=${{ inputs.username1 }}
-        host1=${{ inputs.hostname1 }}
-        pwd1=${{ inputs.password1 }}
-        db1=${{ inputs.database1 }}
-        mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user1 $pwd1 $host1) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db1 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db1.sql
+runs:
+  using: "composite"
+  steps:
+  - run: |
+      user1=${{ inputs.username1 }}
+      host1=${{ inputs.hostname1 }}
+      pwd1=${{ inputs.password1 }}
+      db1=${{ inputs.database1 }}
+      mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user1 $pwd1 $host1) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db1 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db1.sql
 
-        # Use details to connect to dev and mysqldump the tables without data
-        user2=${{ inputs.username2 }}
-        host2=${{ inputs.hostname2 }}
-        pwd2=${{ inputs.password2 }}
-        mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user2 $pwd2 $host2) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db2 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db2.sql
-        if [[ $? -ne 0 ]]; then
-            echo >&2 "SQL error"
-            exit 1
-        fi
-        diff db1.sql db2.sql > db1-db2.diff
-        if [[ $? -ne 0 ]]; then
-            echo "+-----------------------------------+"
-            echo "|             Diff Created         |"
-            echo "+-----------------------------------+"
-            echo ""
-            echo "Created: db1-db2.diff"
-            echo ""
-            cat "db1-db2.diff";
-            exit 1
-        fi
+      # Use details to connect to dev and mysqldump the tables without data
+      user2=${{ inputs.username2 }}
+      host2=${{ inputs.hostname2 }}
+      pwd2=${{ inputs.password2 }}
+      mysqldump --defaults-extra-file=<(printf '[client]\nuser = %s\npassword = %s\nhost = %s' $user2 $pwd2 $host2) -d --skip-add-drop-table --skip-add-drop-database --single-transaction $db2 | sed -e 's/AUTO_INCREMENT=[[:digit:]]* //' | sed -e 's/Host: .*  //' | sed -e 's/-- Dump completed on .*//' > db2.sql
+      if [[ $? -ne 0 ]]; then
+          echo >&2 "SQL error"
+          exit 1
+      fi
+      diff db1.sql db2.sql > db1-db2.diff
+      if [[ $? -ne 0 ]]; then
+          echo "+-----------------------------------+"
+          echo "|             Diff Created         |"
+          echo "+-----------------------------------+"
+          echo ""
+          echo "Created: db1-db2.diff"
+          echo ""
+          cat "db1-db2.diff";
+          exit 1
+      fi
 
-        # If the contents of the stage-prod diff is empty, that means the schemas are exactly the same, and production release is safe if stage is safe.
-        if [ -s "db1-db2.diff" ]; then
-            cat "db1-db2.diff";
-            exit 1;
-        elif [ -s "db1.sql" ] && [ -s "db2.sql"]; then
-            echo ""
-            echo ""
-            echo "+------------------------+"
-            echo "|     Schemas Match      |"
-            echo "+------------------------+"
-            exit 0;
-        else
-            cat "db1-db2.diff";
-            exit 1;
-        fi
+      # If the contents of the stage-prod diff is empty, that means the schemas are exactly the same, and production release is safe if stage is safe.
+      if [ -s "db1-db2.diff" ]; then
+          cat "db1-db2.diff";
+          exit 1;
+      elif [ -s "db1.sql" ] && [ -s "db2.sql"]; then
+          echo ""
+          echo ""
+          echo "+------------------------+"
+          echo "|     Schemas Match      |"
+          echo "+------------------------+"
+          exit 0;
+      else
+          cat "db1-db2.diff";
+          exit 1;
+      fi
 
 
 
