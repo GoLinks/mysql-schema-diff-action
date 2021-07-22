@@ -38,7 +38,7 @@ runs:
   steps:
     - name: Install MySQL Client 5.7
       shell: bash
-      run: sudo apt install -f mysql-client=5.7.30-1ubuntu18.04
+      run: brew install mysql-client@5.7
     - name: MySQL Diff
       shell: bash
       run: |
